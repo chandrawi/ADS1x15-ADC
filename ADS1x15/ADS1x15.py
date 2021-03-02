@@ -1,4 +1,4 @@
-from smbus import SMBus
+from smbus2 import SMBus
 import time
 
 # ADS1x15 default i2c address
