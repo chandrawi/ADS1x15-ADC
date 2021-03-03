@@ -1,7 +1,7 @@
 import ADS1x15
 import RPi.GPIO as GPIO
 
-ads = ADS1x15.ADS1x15(1)
+ads = ADS1x15.ADS1115(1)
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(26, GPIO.OUT)

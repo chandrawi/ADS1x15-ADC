@@ -68,35 +68,35 @@ class ADS1x15:
     i2c = SMBus(1)
 
     # I2C address
-    __address = I2C_address
+    _address = I2C_address
 
     # Default config register
-    __config = 0x8583
+    _config = 0x8583
 
     # Default conversion delay
-    __conversionDelay = 8
+    _conversionDelay = 8
 
     # Maximum input port
-    __maxPorts = 4
+    _maxPorts = 4
 
     # Default conversion lengths
-    __adcBits = 16
+    _adcBits = 16
 
     # Constructor with SMBus ID and I2C address input
     def __init__(self, busId, address = I2C_address) :
         self.i2c = SMBus(busId)
-        self.__address = address
+        self._address = address
         # Store initial config resgister to config property
-        self.__config = self.readRegister(self.CONFIG_REG)
+        self._config = self.readRegister(self.CONFIG_REG)
 
     # Write 16-bit integer to an address pointer register
     def writeRegister(self, address, value) :
         registerValue = [(value >> 8) & 0xFF, value & 0xFF]
-        self.i2c.write_i2c_block_data(self.__address, address, registerValue)
+        self.i2c.write_i2c_block_data(self._address, address, registerValue)
 
     # Read 16-bit integer value from an address pointer register
     def readRegister(self, address) :
-        registerValue = self.i2c.read_i2c_block_data(self.__address, address, 2)
+        registerValue = self.i2c.read_i2c_block_data(self._address, address, 2)
         return (registerValue[0] << 8) + registerValue[1]
 
     # Set input multiplexer configuration
@@ -105,12 +105,12 @@ class ADS1x15:
         if input < 0 or input > 7 : inputRegister = 0x0200
         else : inputRegister = input << 12
         # Masking input argument bits (bit 12-14) to config register
-        self.__config = (self.__config & 0x8FFF) | inputRegister
-        self.writeRegister(self.CONFIG_REG, self.__config)
+        self._config = (self._config & 0x8FFF) | inputRegister
+        self.writeRegister(self.CONFIG_REG, self._config)
 
     # Get input multiplexer configuration
     def getInput(self) :
-        return (self.__config & 0x7000) >> 12
+        return (self._config & 0x7000) >> 12
 
     # Set programmable gain amplifier configuration
     def setGain(self, gain) :
@@ -118,12 +118,12 @@ class ADS1x15:
         if gain < 0 or gain > 7 : gainRegister = 0x0200
         else : gainRegister = gain << 9
         # Masking gain argument bits (bit 9-11) to config register
-        self.__config = (self.__config & 0xF1FF) | gainRegister
-        self.writeRegister(self.CONFIG_REG, self.__config)
+        self._config = (self._config & 0xF1FF) | gainRegister
+        self.writeRegister(self.CONFIG_REG, self._config)
 
     # Get programmable gain amplifier configuration
     def getGain(self) :
-        return (self.__config & 0x0E00) >> 9
+        return (self._config & 0x0E00) >> 9
 
     # Set device operating mode configuration
     def setMode(self, mode) :
@@ -131,12 +131,12 @@ class ADS1x15:
         if mode == 0 : modeRegister = 0x0000
         else : modeRegister = 0x0100
         # Masking mode argument bit (bit 8) to config register
-        self.__config = (self.__config & 0xFEFF) | modeRegister
-        self.writeRegister(self.CONFIG_REG, self.__config)
+        self._config = (self._config & 0xFEFF) | modeRegister
+        self.writeRegister(self.CONFIG_REG, self._config)
 
     # Get device operating mode configuration
     def getMode(self) :
-        return (self.__config & 0x0100) >> 8
+        return (self._config & 0x0100) >> 8
 
     # Set data rate configuration
     def setDataRate(self, dataRate) :
@@ -144,12 +144,12 @@ class ADS1x15:
         if dataRate < 0 or dataRate > 7 : dataRateRegister = 0x0080
         else : dataRateRegister = dataRate << 5
         # Masking dataRate argument bits (bit 5-7) to config register
-        self.__config = (self.__config & 0xFF1F) | dataRateRegister
-        self.writeRegister(self.CONFIG_REG, self.__config)
+        self._config = (self._config & 0xFF1F) | dataRateRegister
+        self.writeRegister(self.CONFIG_REG, self._config)
 
     # Get data rate configuration
     def getDataRate(self) :
-        return (self.__config & 0x00E0) >> 5
+        return (self._config & 0x00E0) >> 5
 
     # Set comparator mode configuration
     def setComparatorMode(self, comparatorMode) :
@@ -157,12 +157,12 @@ class ADS1x15:
         if comparatorMode == 1 : comparatorModeRegister = 0x0010
         else : comparatorModeRegister = 0x0000
         # Masking comparatorMode argument bit (bit 4) to config register
-        self.__config = (self.__config & 0xFFEF) | comparatorModeRegister
-        self.writeRegister(self.CONFIG_REG, self.__config)
+        self._config = (self._config & 0xFFEF) | comparatorModeRegister
+        self.writeRegister(self.CONFIG_REG, self._config)
 
     # Get comparator mode configuration
     def getComparatorMode(self) :
-        return (self.__config & 0x0010) >> 4
+        return (self._config & 0x0010) >> 4
 
     # Set comparator polarity configuration
     def setComparatorPolarity(self, comparatorPolarity) :
@@ -170,12 +170,12 @@ class ADS1x15:
         if comparatorPolarity == 1 : comparatorPolarityRegister = 0x0008
         else : comparatorPolarityRegister = 0x0000
         # Masking comparatorPolarity argument bit (bit 3) to config register
-        self.__config = (self.__config & 0xFFF7) | comparatorPolarityRegister
-        self.writeRegister(self.CONFIG_REG, self.__config)
+        self._config = (self._config & 0xFFF7) | comparatorPolarityRegister
+        self.writeRegister(self.CONFIG_REG, self._config)
 
     # Get comparator polarity configuration
     def getComparatorPolarity(self) :
-        return (self.__config & 0x0008) >> 3
+        return (self._config & 0x0008) >> 3
 
     # Set comparator polarity configuration
     def setComparatorLatch(self, comparatorLatch) :
@@ -183,12 +183,12 @@ class ADS1x15:
         if comparatorLatch == 1 : comparatorLatchRegister = 0x0004
         else : comparatorLatchRegister = 0x0000
         # Masking comparatorPolarity argument bit (bit 2) to config register
-        self.__config = (self.__config & 0xFFFB) | comparatorLatchRegister
-        self.writeRegister(self.CONFIG_REG, self.__config)
+        self._config = (self._config & 0xFFFB) | comparatorLatchRegister
+        self.writeRegister(self.CONFIG_REG, self._config)
 
     # Get comparator polarity configuration
     def getComparatorLatch(self) :
-        return (self.__config & 0x0004) >> 2
+        return (self._config & 0x0004) >> 2
 
     # Set comparator queue configuration
     def setComparatorQueue(self, comparatorQueue) :
@@ -196,12 +196,12 @@ class ADS1x15:
         if comparatorQueue < 0 or comparatorQueue > 3 : comparatorQueueRegister = 0x0002
         else : comparatorQueueRegister = comparatorQueue
         # Masking comparatorQueue argument bits (bit 0-1) to config register
-        self.__config = (self.__config & 0xFFFC) | comparatorQueueRegister
-        self.writeRegister(self.CONFIG_REG, self.__config)
+        self._config = (self._config & 0xFFFC) | comparatorQueueRegister
+        self.writeRegister(self.CONFIG_REG, self._config)
 
     # Get comparator queue configuration
     def getComparatorQueue(self) :
-        return (self.__config & 0x0003)
+        return (self._config & 0x0003)
 
     # Set low threshold for voltage comparator
     def setComparatorThresholdLow(self, threshold) :
@@ -232,22 +232,24 @@ class ADS1x15:
     def __requestADC(self, input) :
         self.setInput(input)
         # Set single-shot conversion start (bit 15)
-        if self.__config & 0x0100 :
-            self.writeRegister(self.CONFIG_REG, self.__config | 0x8000)
+        if self._config & 0x0100 :
+            self.writeRegister(self.CONFIG_REG, self._config | 0x8000)
 
     # Get ADC value with current configuration
     def getADC(self) :
         t = time.time()
         # Wait conversion process finish or reach timeout
-        while not self.isReady() and (time.time() - t) < self.__conversionDelay :
+        while not self.isReady() and (time.time() - t) < self._conversionDelay :
             pass
         value = self.readRegister(self.CONVERSION_REG)
-        if value >= 32768 : value = value - 65536
+        # Shift bit based on ADC bits and change 2'complement negative value to negative integer
+        value = value >> (16 - self._adcBits)
+        if value >= (2 ** (self._adcBits - 1)) : value = value - (2 ** (self._adcBits))
         return value
 
     # Request single-shot conversion of a pin to ground
     def requestADC(self, pin) :
-        if (pin >= self.__maxPorts or pin < 0) : return 0
+        if (pin >= self._maxPorts or pin < 0) : return 0
         self.__requestADC((pin << 12) + 4)
 
     # Get ADC value of a pin
@@ -266,17 +268,17 @@ class ADS1x15:
 
     # Get maximum voltage conversion range
     def getMaxVoltage(self) :
-        if self.__config & 0x0E00 == 0x0000 : return 6.144
-        elif self.__config & 0x0E00 == 0x0100 : return 4.096
-        elif self.__config & 0x0E00 == 0x0200 : return 2.048
-        elif self.__config & 0x0E00 == 0x0400 : return 1.024
-        elif self.__config & 0x0E00 == 0x0800 : return 0.512
+        if self._config & 0x0E00 == 0x0000 : return 6.144
+        elif self._config & 0x0E00 == 0x0100 : return 4.096
+        elif self._config & 0x0E00 == 0x0200 : return 2.048
+        elif self._config & 0x0E00 == 0x0400 : return 1.024
+        elif self._config & 0x0E00 == 0x0800 : return 0.512
         else : return 0.256
 
     # Transform an ADC value to nominal voltage
     def toVoltage(self, value) :
         volts = self.getMaxVoltage() * value
-        return volts / ((2 ** (self.__adcBits - 1)) - 1)
+        return volts / ((2 ** (self._adcBits - 1)) - 1)
 
 # ADS1013 class derifed from general ADS1x15 class
 class ADS1013(ADS1x15) :
@@ -284,12 +286,12 @@ class ADS1013(ADS1x15) :
     # Constructor with SMBus ID and I2C address input and configuration for ADS1013
     def __init__(self, busId, address = I2C_address) :
         self.i2c = SMBus(busId)
-        self.__address = address
-        self.__conversionDelay = 2
-        self.__maxPorts = 1
-        self.__adcBits = 12
+        self._address = address
+        self._conversionDelay = 2
+        self._maxPorts = 1
+        self._adcBits = 12
         # Store initial config resgister to config property
-        self.__config = self.readRegister(self.CONFIG_REG)
+        self._config = self.readRegister(self.CONFIG_REG)
 
 # ADS1014 class derifed from general ADS1x15 class
 class ADS1014(ADS1x15) :
@@ -297,12 +299,12 @@ class ADS1014(ADS1x15) :
     # Constructor with SMBus ID and I2C address input and configuration for ADS1014
     def __init__(self, busId, address = I2C_address) :
         self.i2c = SMBus(busId)
-        self.__address = address
-        self.__conversionDelay = 2
-        self.__maxPorts = 1
-        self.__adcBits = 12
+        self._address = address
+        self._conversionDelay = 2
+        self._maxPorts = 1
+        self._adcBits = 12
         # Store initial config resgister to config property
-        self.__config = self.readRegister(self.CONFIG_REG)
+        self._config = self.readRegister(self.CONFIG_REG)
 
 # ADS1015 class derifed from general ADS1x15 class
 class ADS1015(ADS1x15) :
@@ -310,12 +312,12 @@ class ADS1015(ADS1x15) :
     # Constructor with SMBus ID and I2C address input and configuration for ADS1015
     def __init__(self, busId, address = I2C_address) :
         self.i2c = SMBus(busId)
-        self.__address = address
-        self.__conversionDelay = 2
-        self.__maxPorts = 4
-        self.__adcBits = 12
+        self._address = address
+        self._conversionDelay = 2
+        self._maxPorts = 4
+        self._adcBits = 12
         # Store initial config resgister to config property
-        self.__config = self.readRegister(self.CONFIG_REG)
+        self._config = self.readRegister(self.CONFIG_REG)
 
     # Request single-shot conversion between pin 0 and pin 3
     def requestADC_Differential_0_3(self) :
@@ -350,12 +352,12 @@ class ADS1113(ADS1x15) :
     # Constructor with SMBus ID and I2C address input and configuration for ADS1113
     def __init__(self, busId, address = I2C_address) :
         self.i2c = SMBus(busId)
-        self.__address = address
-        self.__conversionDelay = 8
-        self.__maxPorts = 1
-        self.__adcBits = 16
+        self._address = address
+        self._conversionDelay = 8
+        self._maxPorts = 1
+        self._adcBits = 16
         # Store initial config resgister to config property
-        self.__config = self.readRegister(self.CONFIG_REG)
+        self._config = self.readRegister(self.CONFIG_REG)
 
 # ADS1114 class derifed from general ADS1x15 class
 class ADS1114(ADS1x15) :
@@ -363,12 +365,12 @@ class ADS1114(ADS1x15) :
     # Constructor with SMBus ID and I2C address input and configuration for ADS1114
     def __init__(self, busId, address = I2C_address) :
         self.i2c = SMBus(busId)
-        self.__address = address
-        self.__conversionDelay = 8
-        self.__maxPorts = 1
-        self.__adcBits = 16
+        self._address = address
+        self._conversionDelay = 8
+        self._maxPorts = 1
+        self._adcBits = 16
         # Store initial config resgister to config property
-        self.__config = self.readRegister(self.CONFIG_REG)
+        self._config = self.readRegister(self.CONFIG_REG)
 
 # ADS1115 class derifed from general ADS1x15 class
 class ADS1115(ADS1x15) :
@@ -376,12 +378,12 @@ class ADS1115(ADS1x15) :
     # Constructor with SMBus ID and I2C address input and configuration for ADS1115
     def __init__(self, busId, address = I2C_address) :
         self.i2c = SMBus(busId)
-        self.__address = address
-        self.__conversionDelay = 8
-        self.__maxPorts = 4
-        self.__adcBits = 16
+        self._address = address
+        self._conversionDelay = 8
+        self._maxPorts = 4
+        self._adcBits = 16
         # Store initial config resgister to config property
-        self.__config = self.readRegister(self.CONFIG_REG)
+        self._config = self.readRegister(self.CONFIG_REG)
 
     # Request single-shot conversion between pin 0 and pin 3
     def requestADC_Differential_0_3(self) :
