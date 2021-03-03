@@ -10,8 +10,8 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="ADS1x15-ADC",
-    version="1.0.1",
-    description="Python package to interract with ADS1x15 analog to digital converter (ADC)",
+    version="1.1.0",
+    description="Python library used for ADS1x15 analog to digital converter (ADC)",
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/chandrawi/ADS1x15-ADC",
