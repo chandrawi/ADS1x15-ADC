@@ -229,7 +229,7 @@ class ADS1x15:
         return (value & 0x8000)
 
     # Private method for starting a single-shot conversion
-    def __requestADC(self, input) :
+    def _requestADC(self, input) :
         self.setInput(input)
         # Set single-shot conversion start (bit 15)
         if self._config & 0x0100 :
@@ -250,7 +250,7 @@ class ADS1x15:
     # Request single-shot conversion of a pin to ground
     def requestADC(self, pin) :
         if (pin >= self._maxPorts or pin < 0) : return 0
-        self.__requestADC((pin << 12) + 4)
+        self._requestADC((pin << 12) + 4)
 
     # Get ADC value of a pin
     def readADC(self, pin) :
@@ -259,7 +259,7 @@ class ADS1x15:
 
     # Request single-shot conversion between pin 0 and pin 1
     def requestADC_Differential_0_1(self) :
-        self.__requestADC(0x0000)
+        self._requestADC(0x0000)
 
     # Get ADC value between pin 0 and pin 1
     def readADC_Differential_0_1(self) :
@@ -321,7 +321,7 @@ class ADS1015(ADS1x15) :
 
     # Request single-shot conversion between pin 0 and pin 3
     def requestADC_Differential_0_3(self) :
-        self.__requestADC(0x1000)
+        self._requestADC(0x1000)
 
     # Get ADC value between pin 0 and pin 3
     def readADC_Differential_0_3(self) :
@@ -330,7 +330,7 @@ class ADS1015(ADS1x15) :
 
     # Request single-shot conversion between pin 1 and pin 3
     def requestADC_Differential_1_3(self) :
-        self.__requestADC(0x2000)
+        self._requestADC(0x2000)
 
     # Get ADC value between pin 1 and pin 3
     def readADC_Differential_1_3(self) :
@@ -339,7 +339,7 @@ class ADS1015(ADS1x15) :
 
     # Request single-shot conversion between pin 2 and pin 3
     def requestADC_Differential_2_3(self) :
-        self.__requestADC(0x3000)
+        self._requestADC(0x3000)
 
     # Get ADC value between pin 2 and pin 3
     def readADC_Differential_2_3(self) :
@@ -387,7 +387,7 @@ class ADS1115(ADS1x15) :
 
     # Request single-shot conversion between pin 0 and pin 3
     def requestADC_Differential_0_3(self) :
-        self.__requestADC(0x1000)
+        self._requestADC(0x1000)
 
     # Get ADC value between pin 0 and pin 3
     def readADC_Differential_0_3(self) :
@@ -396,7 +396,7 @@ class ADS1115(ADS1x15) :
 
     # Request single-shot conversion between pin 1 and pin 3
     def requestADC_Differential_1_3(self) :
-        self.__requestADC(0x2000)
+        self._requestADC(0x2000)
 
     # Get ADC value between pin 1 and pin 3
     def readADC_Differential_1_3(self) :
@@ -405,7 +405,7 @@ class ADS1115(ADS1x15) :
 
     # Request single-shot conversion between pin 2 and pin 3
     def requestADC_Differential_2_3(self) :
-        self.__requestADC(0x3000)
+        self._requestADC(0x3000)
 
     # Get ADC value between pin 2 and pin 3
     def readADC_Differential_2_3(self) :
