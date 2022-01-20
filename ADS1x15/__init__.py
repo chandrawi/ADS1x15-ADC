@@ -1,4 +1,5 @@
 # __init__.py
+from .ADS1x15 import LIB_VERSION
 from .ADS1x15 import ADS1x15
 from .ADS1x15 import ADS1013
 from .ADS1x15 import ADS1014
