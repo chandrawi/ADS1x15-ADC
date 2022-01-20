@@ -117,16 +117,16 @@ as that would take 32 bytes.
 
 Data rate in samples per second, based on datasheet numbers.
 
-| data rate | ADS101x | ADS111x | Constant          | Notes   |
-|:---------:|--------:|--------:|:-----------------:|:-------:|
-|     0     |   128   |   8     | DR_128 or DR_8    | slowest |
-|     1     |   250   |   16    | DR_250 or DR_16   |         |
-|     2     |   490   |   32    | DR_490 or DR_32   |         |
-|     3     |   920   |   64    | DR_920 or DR_64   |         |
-|     4     |   1600  |   128   | DR_1600 or DR_128 | default |
-|     5     |   2400  |   250   | DR_2400 or DR_250 |         |
-|     6     |   3300  |   475   | DR_3300 or DR_475 |         |
-|     7     |   3300  |   860   | DR_3300 or DR_860 | fastest |
+| data rate | ADS101x  | ADS111x | Constant        | Constant       | Notes   |
+|:---------:|---------:|--------:|:---------------:|:--------------:|:-------:|
+|     0     | 128 SPS  | 8 SPS   | DR_ADS101X_128  | DR_ADS111X_8   | slowest |
+|     1     | 250 SPS  | 16 SPS  | DR_ADS101X_250  | DR_ADS111X_16  |         |
+|     2     | 490 SPS  | 32 SPS  | DR_ADS101X_490  | DR_ADS111X_32  |         |
+|     3     | 920 SPS  | 64 SPS  | DR_ADS101X_920  | DR_ADS111X_64  |         |
+|     4     | 1600 SPS | 128 SPS | DR_ADS101X_1600 | DR_ADS111X_128 | default |
+|     5     | 2400 SPS | 250 SPS | DR_ADS101X_2400 | DR_ADS111X_250 |         |
+|     6     | 3300 SPS | 475 SPS | DR_ADS101X_3300 | DR_ADS111X_475 |         |
+|     7     | 3300 SPS | 860 SPS | DR_ADS101X_3300 | DR_ADS111X_860 | fastest |
 
 
 ## ReadADC Single mode
