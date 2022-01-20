@@ -1,6 +1,9 @@
 from smbus2 import SMBus
 import time
 
+# Library version
+LIB_VERSION = "1.2.0"
+
 # ADS1x15 default i2c address
 I2C_address    = 0x48
 
@@ -37,21 +40,21 @@ class ADS1x15:
     INVALID_MODE = -1
 
     # Data rate configuration
-    DR_128  = 0
-    DR_250  = 1
-    DR_490  = 2
-    DR_920  = 3
-    DR_1600 = 4
-    DR_2400 = 5
-    DR_3300 = 6
-    DR_8    = 0
-    DR_16   = 1
-    DR_32   = 2
-    DR_64   = 3
-    DR_128  = 4
-    DR_250  = 5
-    DR_475  = 6
-    DR_860  = 7
+    DR_ADS101X_128  = 0
+    DR_ADS101X_250  = 1
+    DR_ADS101X_490  = 2
+    DR_ADS101X_920  = 3
+    DR_ADS101X_1600 = 4
+    DR_ADS101X_2400 = 5
+    DR_ADS101X_3300 = 6
+    DR_ADS111X_8    = 0
+    DR_ADS111X_16   = 1
+    DR_ADS111X_32   = 2
+    DR_ADS111X_64   = 3
+    DR_ADS111X_128  = 4
+    DR_ADS111X_250  = 5
+    DR_ADS111X_475  = 6
+    DR_ADS111X_860  = 7
 
     # Comparator configuration
     COMP_MODE_TRADITIONAL = 0
@@ -252,10 +255,10 @@ class ADS1x15:
     # Get ADC value with current configuration
     def _getADC(self) -> int :
         t = time.time()
-        isContinuos = self._config & 0x0100
+        isContinuos = not (self._config & 0x0100)
         # Wait conversion process finish or reach conversion time for continuous mode
         while not self.isReady() :
-            if ((time.time() - t) / 1000) < self._conversionDelay and isContinuos :
+            if ((time.time() - t) * 1000) > self._conversionDelay and isContinuos :
                 break
         return self.getValue()
 
@@ -270,7 +273,7 @@ class ADS1x15:
     # Request single-shot conversion of a pin to ground
     def requestADC(self, pin: int) :
         if (pin >= self._maxPorts or pin < 0) : return
-        self._requestADC((pin << 12) + 4)
+        self._requestADC(pin + 4)
 
     # Get ADC value of a pin
     def readADC(self, pin: int) :
@@ -297,7 +300,7 @@ class ADS1x15:
         else : return 0.256
 
     # Transform an ADC value to nominal voltage
-    def toVoltage(self, value: int) -> float :
+    def toVoltage(self, value: int = 1) -> float :
         volts = self.getMaxVoltage() * value
         return volts / ((2 ** (self._adcBits - 1)) - 1)
 
