@@ -27,30 +27,31 @@ class ADS1x15:
     PGA_6_144V = 0
     PGA_4_096V = 1
     PGA_2_048V = 2
-    PGA_1_024V = 3
-    PGA_0_512V = 4
-    PGA_0_256V = 5
+    PGA_1_024V = 4
+    PGA_0_512V = 8
+    PGA_0_256V = 16
 
     # Device operating mode configuration
     MODE_CONTINUE = 0
     MODE_SINGLE   = 1
+    INVALID_MODE = -1
 
     # Data rate configuration
-    DR_ADS1015_128  = 0
-    DR_ADS1015_250  = 1
-    DR_ADS1015_490  = 2
-    DR_ADS1015_920  = 3
-    DR_ADS1015_1600 = 4
-    DR_ADS1015_2400 = 5
-    DR_ADS1015_3300 = 6
-    DR_ADS1115_8    = 0
-    DR_ADS1115_16   = 1
-    DR_ADS1115_32   = 2
-    DR_ADS1115_64   = 3
-    DR_ADS1115_128  = 4
-    DR_ADS1115_250  = 5
-    DR_ADS1115_475  = 6
-    DR_ADS1115_860  = 7
+    DR_128  = 0
+    DR_250  = 1
+    DR_490  = 2
+    DR_920  = 3
+    DR_1600 = 4
+    DR_2400 = 5
+    DR_3300 = 6
+    DR_8    = 0
+    DR_16   = 1
+    DR_32   = 2
+    DR_64   = 3
+    DR_128  = 4
+    DR_250  = 5
+    DR_475  = 6
+    DR_860  = 7
 
     # Comparator configuration
     COMP_MODE_TRADITIONAL = 0
@@ -115,15 +116,25 @@ class ADS1x15:
     # Set programmable gain amplifier configuration
     def setGain(self, gain: int) :
         # Filter gain argument
-        if gain < 0 or gain > 7 : gainRegister = 0x0200
-        else : gainRegister = gain << 9
+        if gain == self.PGA_4_096V : gainRegister = 0x0200
+        elif gain == self.PGA_2_048V : gainRegister = 0x0400
+        elif gain == self.PGA_1_024V : gainRegister = 0x0600
+        elif gain == self.PGA_0_512V : gainRegister = 0x0800
+        elif gain == self.PGA_0_256V : gainRegister = 0x0A00
+        else : gainRegister = 0x0000
         # Masking gain argument bits (bit 9-11) to config register
         self._config = (self._config & 0xF1FF) | gainRegister
         self.writeRegister(self.CONFIG_REG, self._config)
 
     # Get programmable gain amplifier configuration
     def getGain(self) :
-        return (self._config & 0x0E00) >> 9
+        gainRegister = self._config & 0x0E00
+        if gainRegister == 0x0200 : return self.PGA_4_096V
+        elif gainRegister == 0x0400 : return self.PGA_2_048V
+        elif gainRegister == 0x0600 : return self.PGA_1_024V
+        elif gainRegister == 0x0800 : return self.PGA_0_512V
+        elif gainRegister == 0x0A00 : return self.PGA_0_256V
+        else : return 0x0000
 
     # Set device operating mode configuration
     def setMode(self, mode: int) :
@@ -276,7 +287,7 @@ class ADS1x15:
         else : return 0.256
 
     # Transform an ADC value to nominal voltage
-    def toVoltage(self, value) -> float :
+    def toVoltage(self, value: int) -> float :
         volts = self.getMaxVoltage() * value
         return volts / ((2 ** (self._adcBits - 1)) - 1)
 
