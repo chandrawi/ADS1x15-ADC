@@ -32,7 +32,7 @@ class ADS1x15:
     PGA_0_256V = 16
 
     # Device operating mode configuration
-    MODE_CONTINUE = 0
+    MODE_CONTINUOUS = 0
     MODE_SINGLE   = 1
     INVALID_MODE = -1
 
@@ -239,6 +239,9 @@ class ADS1x15:
         value = self.readRegister(self.CONFIG_REG)
         return bool(value & 0x8000)
 
+    def isBusy(self) :
+        return not self.isReady()
+
     # Private method for starting a single-shot conversion
     def _requestADC(self, input) :
         self.setInput(input)
@@ -247,11 +250,17 @@ class ADS1x15:
             self.writeRegister(self.CONFIG_REG, self._config | 0x8000)
 
     # Get ADC value with current configuration
-    def getADC(self) -> int :
+    def _getADC(self) -> int :
         t = time.time()
-        # Wait conversion process finish or reach timeout
-        while not self.isReady() and (time.time() - t) < self._conversionDelay :
-            pass
+        isContinuos = self._config & 0x0100
+        # Wait conversion process finish or reach conversion time for continuous mode
+        while not self.isReady() :
+            if ((time.time() - t) / 1000) < self._conversionDelay and isContinuos :
+                break
+        return self.getValue()
+
+    # Get ADC value
+    def getValue(self) -> int :
         value = self.readRegister(self.CONVERSION_REG)
         # Shift bit based on ADC bits and change 2'complement negative value to negative integer
         value = value >> (16 - self._adcBits)
@@ -265,8 +274,9 @@ class ADS1x15:
 
     # Get ADC value of a pin
     def readADC(self, pin: int) :
+        if (pin >= self._maxPorts or pin < 0) : return 0
         self.requestADC(pin)
-        return self.getADC()
+        return self._getADC()
 
     # Request single-shot conversion between pin 0 and pin 1
     def requestADC_Differential_0_1(self) :
@@ -275,7 +285,7 @@ class ADS1x15:
     # Get ADC value between pin 0 and pin 1
     def readADC_Differential_0_1(self) :
         self.requestADC_Differential_0_1()
-        return self.getADC()
+        return self._getADC()
 
     # Get maximum voltage conversion range
     def getMaxVoltage(self) :
@@ -337,7 +347,7 @@ class ADS1015(ADS1x15) :
     # Get ADC value between pin 0 and pin 3
     def readADC_Differential_0_3(self) :
         self.requestADC_Differential_0_3()
-        return self.getADC()
+        return self._getADC()
 
     # Request single-shot conversion between pin 1 and pin 3
     def requestADC_Differential_1_3(self) :
@@ -346,7 +356,7 @@ class ADS1015(ADS1x15) :
     # Get ADC value between pin 1 and pin 3
     def readADC_Differential_1_3(self) :
         self.requestADC_Differential_1_3()
-        return self.getADC()
+        return self._getADC()
 
     # Request single-shot conversion between pin 2 and pin 3
     def requestADC_Differential_2_3(self) :
@@ -355,7 +365,7 @@ class ADS1015(ADS1x15) :
     # Get ADC value between pin 2 and pin 3
     def readADC_Differential_2_3(self) :
         self.requestADC_Differential_2_3()
-        return self.getADC()
+        return self._getADC()
 
 # ADS1113 class derifed from general ADS1x15 class
 class ADS1113(ADS1x15) :
@@ -403,7 +413,7 @@ class ADS1115(ADS1x15) :
     # Get ADC value between pin 0 and pin 3
     def readADC_Differential_0_3(self) :
         self.requestADC_Differential_0_3()
-        return self.getADC()
+        return self._getADC()
 
     # Request single-shot conversion between pin 1 and pin 3
     def requestADC_Differential_1_3(self) :
@@ -412,7 +422,7 @@ class ADS1115(ADS1x15) :
     # Get ADC value between pin 1 and pin 3
     def readADC_Differential_1_3(self) :
         self.requestADC_Differential_1_3()
-        return self.getADC()
+        return self._getADC()
 
     # Request single-shot conversion between pin 2 and pin 3
     def requestADC_Differential_2_3(self) :
@@ -421,4 +431,4 @@ class ADS1115(ADS1x15) :
     # Get ADC value between pin 2 and pin 3
     def readADC_Differential_2_3(self) :
         self.requestADC_Differential_2_3()
-        return self.getADC()
+        return self._getADC()
