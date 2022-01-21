@@ -7,10 +7,12 @@ PURPOSE : read analog input
 test
 connect 1 potmeter 
 
-GND ---[   x   ]------ 5V
+GND ---[   x   ]------ 3.3V
            |
 
 measure at x (connect to AIN0).
+
+GND ---[LED]---[ALERT_PIN]---[ R ]--- 3.3V
 
 Connect a LED (+ resistor) to ALERT PIN
 and see it trigger at configured way by the comparator.
@@ -25,8 +27,8 @@ ADS = ADS1x15.ADS1115(1, 0x48)
 print(os.path.basename(__file__))
 print("ADS1X15_LIB_VERSION: {}".format(ADS1x15.LIB_VERSION))
 
-# set gain to 6.144V max
-ADS.setGain(ADS.PGA_6_144V)
+# set gain to 4.096V max
+ADS.setGain(ADS.PGA_4_096V)
 
 # set comparator to traditional mode, active high, latch, and trigger alert after 1 conversion
 ADS.setComparatorMode(ADS.COMP_MODE_TRADITIONAL)
