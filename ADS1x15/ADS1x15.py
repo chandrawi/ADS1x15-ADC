@@ -2,7 +2,7 @@ from smbus2 import SMBus
 import time
 
 # Library version
-LIB_VERSION = "1.2.0"
+LIB_VERSION = "1.2.1"
 
 # ADS1x15 default i2c address
 I2C_address    = 0x48
@@ -106,7 +106,7 @@ class ADS1x15:
     # Set input multiplexer configuration
     def setInput(self, input: int) :
         # Filter input argument
-        if input < 0 or input > 7 : inputRegister = 0x0200
+        if input < 0 or input > 7 : inputRegister = 0x0000
         else : inputRegister = input << 12
         # Masking input argument bits (bit 12-14) to config register
         self._config = (self._config & 0x8FFF) | inputRegister
@@ -218,8 +218,8 @@ class ADS1x15:
         return (self._config & 0x0003)
 
     # Set low threshold for voltage comparator
-    def setComparatorThresholdLow(self, threshold: int) :
-        self.writeRegister(self.LO_THRESH_REG, threshold)
+    def setComparatorThresholdLow(self, threshold: float) :
+        self.writeRegister(self.LO_THRESH_REG, round(threshold))
 
     # Get voltage comparator low threshold
     def getComparatorThresholdLow(self) :
@@ -228,8 +228,8 @@ class ADS1x15:
         return threshold
 
     # Set high threshold for voltage comparator
-    def setComparatorThresholdHigh(self, threshold: int) :
-        self.writeRegister(self.HI_THRESH_REG, threshold)
+    def setComparatorThresholdHigh(self, threshold: float) :
+        self.writeRegister(self.HI_THRESH_REG, round(threshold))
 
     # Get voltage comparator high threshold
     def getComparatorThresholdHigh(self) :
@@ -283,7 +283,7 @@ class ADS1x15:
 
     # Request single-shot conversion between pin 0 and pin 1
     def requestADC_Differential_0_1(self) :
-        self._requestADC(0x0000)
+        self._requestADC(0)
 
     # Get ADC value between pin 0 and pin 1
     def readADC_Differential_0_1(self) :
@@ -345,7 +345,7 @@ class ADS1015(ADS1x15) :
 
     # Request single-shot conversion between pin 0 and pin 3
     def requestADC_Differential_0_3(self) :
-        self._requestADC(0x1000)
+        self._requestADC(1)
 
     # Get ADC value between pin 0 and pin 3
     def readADC_Differential_0_3(self) :
@@ -354,7 +354,7 @@ class ADS1015(ADS1x15) :
 
     # Request single-shot conversion between pin 1 and pin 3
     def requestADC_Differential_1_3(self) :
-        self._requestADC(0x2000)
+        self._requestADC(2)
 
     # Get ADC value between pin 1 and pin 3
     def readADC_Differential_1_3(self) :
@@ -363,7 +363,7 @@ class ADS1015(ADS1x15) :
 
     # Request single-shot conversion between pin 2 and pin 3
     def requestADC_Differential_2_3(self) :
-        self._requestADC(0x3000)
+        self._requestADC(3)
 
     # Get ADC value between pin 2 and pin 3
     def readADC_Differential_2_3(self) :
@@ -411,7 +411,7 @@ class ADS1115(ADS1x15) :
 
     # Request single-shot conversion between pin 0 and pin 3
     def requestADC_Differential_0_3(self) :
-        self._requestADC(0x1000)
+        self._requestADC(1)
 
     # Get ADC value between pin 0 and pin 3
     def readADC_Differential_0_3(self) :
@@ -420,7 +420,7 @@ class ADS1115(ADS1x15) :
 
     # Request single-shot conversion between pin 1 and pin 3
     def requestADC_Differential_1_3(self) :
-        self._requestADC(0x2000)
+        self._requestADC(2)
 
     # Get ADC value between pin 1 and pin 3
     def readADC_Differential_1_3(self) :
@@ -429,7 +429,7 @@ class ADS1115(ADS1x15) :
 
     # Request single-shot conversion between pin 2 and pin 3
     def requestADC_Differential_2_3(self) :
-        self._requestADC(0x3000)
+        self._requestADC(3)
 
     # Get ADC value between pin 2 and pin 3
     def readADC_Differential_2_3(self) :
