@@ -26,9 +26,7 @@ measure at x and y  (connect to AIN0 and AIN1).
 range from -VDD .. +VDD are possible
 """
 
-import os, sys
-currentdir = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(os.path.dirname(currentdir))
+import os
 import time
 import ADS1x15
 

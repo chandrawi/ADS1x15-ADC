@@ -7,7 +7,7 @@
 
 Python library for I2C ADC ADS1015, ADS1115, and similar analog to digital converter. This library works with Raspberry pi or other SBC using I2C bus under Linux kernel.
 
-For using I2C ADC with Arduino, you can check this similar library in this [link](https://github.com/RobTillaart/ADS1X15).
+For using I2C ADC with Arduino, you can check similar library in this [link](https://github.com/RobTillaart/ADS1X15).
 
 
 ## Description
@@ -50,7 +50,7 @@ pip3 install dist/ADS1x15_ADC-1.2.1-py3-none-any.whl
 
 ### Enabling I2C Interface
 
-Before using the library, I2C interface must be enabled. For Raspberry pi OS, this is done by set I2C interface enable using raspi-config or edit `/boot/config.txt` by adding following line.
+Before using the library, I2C interface must be enabled. For Raspberry pi OS, this is done by set I2C interface enable using raspi-config or edit **/boot/config.txt** by adding following line.
 ```txt
 dtparam=i2c_arm=on
 ```
