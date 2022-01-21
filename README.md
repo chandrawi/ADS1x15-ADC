@@ -5,7 +5,9 @@
 
 # ADS1X15
 
-Python library for I2C ADC ADS1015, ADS1115, and similar analog to digital converter. Works using I2C bus under Linux kernel.
+Python library for I2C ADC ADS1015, ADS1115, and similar analog to digital converter. This library works with Raspberry pi or other SBC using I2C bus under Linux kernel.
+
+For using I2C ADC with Arduino, you can check this similar library in this [link](https://github.com/RobTillaart/ADS1X15).
 
 
 ## Description
@@ -27,6 +29,33 @@ interesting from functionality point of view as these can also do
 differential measurement.
 
 
+## Installation
+
+### Using pip
+
+Using terminal run following command.
+```sh
+pip3 install ADS1x15-ADC
+```
+
+### Using Git and Build Package
+
+To using latest update of the library, you can clone then build python package manually. Using this method require **setuptools** and **wheel** module.
+```sh
+git clone https://github.com/chandrawi/ADS1x15-ADC.git
+cd ADS1x15-ADC
+python3 setup.py bdist_wheel
+pip3 install dist/ADS1x15_ADC-1.2.1-py3-none-any.whl
+```
+
+### Enabling I2C Interface
+
+Before using the library, I2C interface must be enabled. For Raspberry pi OS, this is done by set I2C interface enable using raspi-config or edit `/boot/config.txt` by adding following line.
+```txt
+dtparam=i2c_arm=on
+```
+
+
 ## Initializing
 
 The address of the ADS1113/4/5 is determined by to which pin the **ADDR**
@@ -39,6 +68,7 @@ is connected to:
 |      SDA              |   0x4A  |         |
 |      SCL              |   0x4B  |         |
 
+To initialize the library you must call constructor as described below.
 - **ADS1x15()** base constructor, should not be used.
 - **ADS1013(I2C_busId, I2C_address)** Constructor with I2C bus id, 
 and optional device address as parameter.
@@ -53,6 +83,8 @@ and optional device address as parameter.
 - **ADS1115(I2C_busId, I2C_address)** Constructor with I2C bus id, 
 and optional device address as parameter.
 
+For example.
+
 ```python
 import ADS1x15
 
@@ -65,7 +97,7 @@ ADS = ADS1x15.ADS1115(1)
 
 ### Programmable Gain
 
-- **setGain(gain: int)** set the gain value, indicating the maxVoltage that can be measured. Adjusting the gain allows one to make more precise measurements.
+- **setGain(gain: int)** set the gain value, indicating the maxVoltage that can be measured. Adjusting the gain allowing to make more precise measurements.
 Note: the gain is not set in the device until an explicit read/request of the ADC (any read call will do).
 See table below.
 - **getGain()** returns the gain value (index).
@@ -86,19 +118,19 @@ The default value of 1 returns the conversion factor for any raw number.
 
 The voltage factor can also be used to set HIGH and LOW threshold registers 
 with a voltage in the comparator mode.
-Check the examples.
+Check the [examples](https://github.com/chandrawi/ADS1x15-ADC/blob/main/examples/ADS_comparator.py).
 
 ```python
   f = ADS.toVoltage()
-  ADS.setComparatorThresholdLow( 3.0 / f )
-  ADS.setComparatorThresholdLow( 4.3 / f )
+  ADS.setComparatorThresholdLow( 1.5 / f )
+  ADS.setComparatorThresholdHigh( 2.5 / f )
 ```
 
 
 ### Operational mode
 
 The ADS sensor can operate in single shot or continuous mode. 
-Depending on how often one needs a conversion one can tune the mode.
+Depending on how often conversions needed you can tune the mode.
 - **setMode(mode: int)** 0 = MODE_CONTINUOUS, 1 = MODE_SINGLE (default)
 Note: the mode is not set in the device until an explicit read/request of the ADC (any read call will do).
 - **getMode()** returns current mode 0 or 1, or INVALID_MODE = -1.
@@ -112,10 +144,7 @@ Values above 7 ==> will be set to the default 4.
 Note: the data rate is not set in the device until an explicit read/request of the ADC (any read call will do).
 - **getDataRate()** returns the current data rate (index).
 
-The library has no means to convert this index to the actual numbers
-as that would take 32 bytes. 
-
-Data rate in samples per second, based on datasheet numbers.
+Data rate in samples per second, based on datasheet is described on table below.
 
 | data rate | ADS101x  | ADS111x | Constant        | Constant       | Notes   |
 |:---------:|---------:|--------:|:---------------:|:--------------:|:-------:|
@@ -131,7 +160,7 @@ Data rate in samples per second, based on datasheet numbers.
 
 ## ReadADC Single mode
 
-Reading the ADC is very straightforward, the **readADC()** function handles all in one call. This function will wait until conversion finished.
+Reading the ADC in single mode is very straightforward, the **readADC()** function handles all in one call. This function will wait until conversion finished.
 - **readADC(pin: int)** normal ADC functionality, pin = 0..3. 
 If the pin number is out of range, this function will return 0.
 
@@ -140,12 +169,13 @@ If the pin number is out of range, this function will return 0.
 ADS.readADC(0)
 ```
 
-To read the ADC in an asynchronous way (e.g. to minimize blocking) one has to use three calls:
+See [examples](https://github.com/chandrawi/ADS1x15-ADC/blob/main/examples/ADS_minimum.py).
+
+To read the ADC in an asynchronous way (e.g. to minimize blocking) you need call three functions:
 - **requestADC(pin: int)**  Start the conversion. pin = 0..3. 
 - **isBusy()** (Is the conversion not ready yet?) or **isReady()** (Is the conversion ready?) Works only in SINGLE mode!
 - **getValue()** Read the result of the conversion.
 
-in terms of code
 ```python
 # configuration things here
 ADS.setMode(ADS.MODE_SINGLE)    # SINGLE SHOT MODE
@@ -156,12 +186,13 @@ if ADS.isReady() :
     ADS.requestADC(0)           # request new conversion
 # do other things here
 ```
-See examples
+
+See [examples](https://github.com/chandrawi/ADS1x15-ADC/blob/main/examples/ADS_read_async.py).
 
 
 ## ReadADC continuous mode
 
-To use the continuous mode one need three calls
+To use the continuous mode you need call three functions:
 - **setMode(0)** 0 = MODE_CONTINUOUS, 1 = MODE_SINGLE (default).
 Note: the mode is not set in the device until an explicit read/request of the ADC (any read call will do).
 - **readADC(pin: int)** or **requestADC(pin: int)** to get the continuous mode started.
@@ -179,13 +210,21 @@ while True :
     sleep(1)
 ```
 
-By using **isBusy()** or **isReady()** one can wait until new data is available.
-Note this only works in the SINGLE_SHOT mode.
+See [examples](https://github.com/chandrawi/ADS1x15-ADC/blob/main/examples/ADS_continuous.py).
 
-In continuous mode one should use the **ALERT/RDY** pin to trigger via hardware the readiness of the conversion.
-This can be done by using an interrupt.
 
-See examples.
+In continuous mode, you can't use **isBusy()** or **isReady()** functions to wait until new data available.
+Instead you can configure **ALERT/RDY** pin to trigger an interrupt signal when conversion data ready.
+
+### Configure RDY pin interrupt signal
+
+Interrupt signals on the **ALERT/RDY** pin can be triggered every conversion data ready. 
+This is done by setting Hi_thresh register MSB to 1 and the Lo_thresh register MSB to 0.
+
+- **setComparatorThresholdLow(lo: int)** set 0x8000 as parameter.
+- **setComparatorThresholdHigh(hi: int)** set 0x7FFF as parameter.
+
+See [examples]().
 
 
 ## ReadADC Differential
@@ -202,31 +241,17 @@ For reading the ADC in a differential way there are 4 calls possible.
 ADS.readADC_Differential_0_1(0)
 ```
 
-The differential reading of the ADC can also be done with asynchronous calls.
+The differential reading of the ADC can also can be done using asynchronous calls.
 
 - **requestADC_Differential_0_1()** starts conversion for differential reading
 - **requestADC_Differential_0_3()** ADS1x15 only
 - **requestADC_Differential_1_3()** ADS1x15 only
 - **requestADC_Differential_2_3()** ADS1x15 only
 
-After one of these calls one need to call
+After one of these calls you need to call
 - **getValue()** Read the result of the last conversion.
 
-The readiness of a CONTINUOUS conversion can only be detected by the **RDY** line.
-Best to use an interrupt for this, see examples.
-
-
-### Threshold registers ==> mode RDY pin
-
-If the thresholdHigh is set to 0x0100 and the thresholdLow to 0x0000
-the **ALERT/RDY** pin is triggered when a conversion is ready.
-
-- **setComparatorThresholdLow(lo)** writes value to device directly.
-- **setComparatorThresholdHigh(hi)** writes value to device directly.
-- **getComparatorThresholdLow()** reads value from device.
-- **getComparatorThresholdHigh()** reads value from device.
-
-See examples.
+See [examples](https://github.com/chandrawi/ADS1x15-ADC/blob/main/examples/ADS_differential.py).
 
 
 ## Comparator
@@ -234,8 +259,8 @@ See examples.
 Please read Page 15 of the datasheet as the behaviour of the
 comparator is not trivial.
 
-NOTE: all comparator settings are copied to the device only after an explicit 
-**readADC()** or **requestADC()**
+NOTE: all comparator settings are copied to the device only after calling 
+**readADC()** or **requestADC()** functions.
 
 
 ### Comparator Mode
@@ -245,7 +270,7 @@ When configured as a **TRADITIONAL** comparator, the **ALERT/RDY** pin asserts
 high threshold register. The comparator then de-asserts when the input
 signal falls below the low threshold register value.
 
-- **setComparatorMode(mode: int)** value 0 = TRADITIONAL 1 = WINDOW, 
+- **setComparatorMode(mode: int)** value 0 = COMP_MODE_TRADITIONAL 1 = COMP_MODE_WINDOW, 
 - **getComparatorMode()** returns value set.
   
   
@@ -297,8 +322,8 @@ A value of 3 (or above) effectively disables the comparator. See table below.
 
 ### Threshold registers comparator mode
 
-Depending on the comparator mode **TRADITIONAL** or **WINDOW** the thresholds registers
-mean something different see - Comparator Mode above or datasheet.
+Depending on the comparator mode **TRADITIONAL** or **WINDOW** the thresholds registers mean something different.
+See Comparator Mode section or datasheet for more information.
 
 - **setComparatorThresholdLow(lo)** set the low threshold; take care the hi >= lo.
 - **setComparatorThresholdHigh(hi)**  set the high threshold; take care the hi >= lo.
