@@ -1,9 +1,6 @@
 from smbus2 import SMBus
 import time
 
-# Library version
-LIB_VERSION = "1.2.1"
-
 # ADS1x15 default i2c address
 I2C_address    = 0x48
 
@@ -309,7 +306,7 @@ class ADS1013(ADS1x15) :
     "ADS1013 class derifed from general ADS1x15 class"
 
     def __init__(self, busId: int, address: int = I2C_address) :
-        "Constructor with SMBus ID and I2C address input and configuration for ADS1013"
+        "Initialize ADS1013 with SMBus ID and I2C address configuration"
         self.i2c = SMBus(busId)
         self._address = address
         self._conversionDelay = 2
@@ -322,7 +319,7 @@ class ADS1014(ADS1x15) :
     "ADS1014 class derifed from general ADS1x15 class"
 
     def __init__(self, busId: int, address: int = I2C_address) :
-        "Constructor with SMBus ID and I2C address input and configuration for ADS1014"
+        "Initialize ADS1014 with SMBus ID and I2C address configuration"
         self.i2c = SMBus(busId)
         self._address = address
         self._conversionDelay = 2
@@ -335,7 +332,7 @@ class ADS1015(ADS1x15) :
     "ADS1015 class derifed from general ADS1x15 class"
 
     def __init__(self, busId: int, address: int = I2C_address) :
-        "Constructor with SMBus ID and I2C address input and configuration for ADS1015"
+        "Initialize ADS1015 with SMBus ID and I2C address configuration"
         self.i2c = SMBus(busId)
         self._address = address
         self._conversionDelay = 2
@@ -375,7 +372,7 @@ class ADS1113(ADS1x15) :
     "ADS1113 class derifed from general ADS1x15 class"
 
     def __init__(self, busId: int, address: int = I2C_address) :
-        "Constructor with SMBus ID and I2C address input and configuration for ADS1113"
+        "Initialize ADS1113 with SMBus ID and I2C address configuration"
         self.i2c = SMBus(busId)
         self._address = address
         self._conversionDelay = 8
@@ -388,7 +385,7 @@ class ADS1114(ADS1x15) :
     "ADS1114 class derifed from general ADS1x15 class"
 
     def __init__(self, busId: int, address: int = I2C_address) :
-        "Constructor with SMBus ID and I2C address input and configuration for ADS1114"
+        "Initialize ADS1114 with SMBus ID and I2C address configuration"
         self.i2c = SMBus(busId)
         self._address = address
         self._conversionDelay = 8
@@ -401,7 +398,7 @@ class ADS1115(ADS1x15) :
     "ADS1115 class derifed from general ADS1x15 class"
 
     def __init__(self, busId: int, address: int = I2C_address) :
-        "Constructor with SMBus ID and I2C address input and configuration for ADS1115"
+        "Initialize ADS1115 with SMBus ID and I2C address configuration"
         self.i2c = SMBus(busId)
         self._address = address
         self._conversionDelay = 8

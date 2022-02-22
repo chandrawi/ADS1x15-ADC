@@ -27,7 +27,7 @@ import ADS1x15
 ADS = ADS1x15.ADS1115(1, 0x48)
 
 print(os.path.basename(__file__))
-print("ADS1X15_LIB_VERSION: {}".format(ADS1x15.LIB_VERSION))
+print("ADS1X15_LIB_VERSION: {}".format(ADS1x15.__version__))
 
 ADS.setGain(ADS.PGA_4_096V)
 ADS.setDataRate(ADS.DR_ADS111X_128)
