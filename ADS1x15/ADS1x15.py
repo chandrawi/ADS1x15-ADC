@@ -290,12 +290,12 @@ class ADS1x15:
         self.requestADC_Differential_0_1()
         return self._getADC()
 
-    # Get maximum voltage conversion range
-    def getMaxVoltage(self) :
+    def getMaxVoltage(self) -> float :
+        "Get maximum voltage conversion range"
         if self._config & 0x0E00 == 0x0000 : return 6.144
-        elif self._config & 0x0E00 == 0x0100 : return 4.096
-        elif self._config & 0x0E00 == 0x0200 : return 2.048
-        elif self._config & 0x0E00 == 0x0400 : return 1.024
+        elif self._config & 0x0E00 == 0x0200 : return 4.096
+        elif self._config & 0x0E00 == 0x0400 : return 2.048
+        elif self._config & 0x0E00 == 0x0600 : return 1.024
         elif self._config & 0x0E00 == 0x0800 : return 0.512
         else : return 0.256
 

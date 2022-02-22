@@ -103,7 +103,7 @@ See table below.
 - **getGain()** returns the gain value (index).
 
 | PGA value | Max Voltage | Constant   | Notes   |
-|:---------:|:-----------:| :---------:|:-------:|
+|:---------:|:-----------:|:----------:|:-------:|
 |      0    |   ±6.144V   | PGA_6_144V | default |
 |      1    |   ±4.096V   | PGA_4_096V |         |
 |      2    |   ±2.048V   | PGA_2_048V |         |
@@ -190,6 +190,33 @@ if ADS.isReady() :
 See [examples](https://github.com/chandrawi/ADS1x15-ADC/blob/main/examples/ADS_read_async.py).
 
 
+## ReadADC Differential
+
+For reading the ADC in a differential way there are 4 calls possible.
+
+- **readADC_Differential_0_1()** returns the difference between 2 ADC pins.
+- **readADC_Differential_0_3()** ADS1x15 only
+- **readADC_Differential_1_3()** ADS1x15 only
+- **readADC_Differential_2_3()** ADS1x15 only
+
+```python
+# read differential ADC between pin 0 and 1
+ADS.readADC_Differential_0_1(0)
+```
+
+The differential reading of the ADC can also can be done using asynchronous calls.
+
+- **requestADC_Differential_0_1()** starts conversion for differential reading
+- **requestADC_Differential_0_3()** ADS1x15 only
+- **requestADC_Differential_1_3()** ADS1x15 only
+- **requestADC_Differential_2_3()** ADS1x15 only
+
+After one of these calls you need to call
+- **getValue()** Read the result of the last conversion.
+
+See [examples](https://github.com/chandrawi/ADS1x15-ADC/blob/main/examples/ADS_differential.py).
+
+
 ## ReadADC continuous mode
 
 To use the continuous mode you need call three functions:
@@ -225,33 +252,6 @@ This is done by setting Hi_thresh register MSB to 1 and the Lo_thresh register M
 - **setComparatorThresholdHigh(hi: int)** set 0x7FFF as parameter.
 
 See [examples]().
-
-
-## ReadADC Differential
-
-For reading the ADC in a differential way there are 4 calls possible.
-
-- **readADC_Differential_0_1()** returns the difference between 2 ADC pins.
-- **readADC_Differential_0_3()** ADS1x15 only
-- **readADC_Differential_1_3()** ADS1x15 only
-- **readADC_Differential_2_3()** ADS1x15 only
-
-```python
-# read differential ADC between pin 0 and 1
-ADS.readADC_Differential_0_1(0)
-```
-
-The differential reading of the ADC can also can be done using asynchronous calls.
-
-- **requestADC_Differential_0_1()** starts conversion for differential reading
-- **requestADC_Differential_0_3()** ADS1x15 only
-- **requestADC_Differential_1_3()** ADS1x15 only
-- **requestADC_Differential_2_3()** ADS1x15 only
-
-After one of these calls you need to call
-- **getValue()** Read the result of the last conversion.
-
-See [examples](https://github.com/chandrawi/ADS1x15-ADC/blob/main/examples/ADS_differential.py).
 
 
 ## Comparator
