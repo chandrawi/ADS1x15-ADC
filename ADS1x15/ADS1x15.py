@@ -65,9 +65,6 @@ class ADS1x15:
     COMP_QUE_4_CONV       = 2
     COMP_QUE_NONE         = 3
 
-    # I2C object from smbus library
-    i2c = SMBus(1)
-
     # I2C address
     _address = I2C_address
 
